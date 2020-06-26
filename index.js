@@ -7,6 +7,7 @@ const likesCom = require('./routes/like-unlike');
 const profile = require('./routes/user-profile');
 const config = require('./config/key');
 const HttpError = require('./models/http-error');
+const fs = require('fs');
 
 mongoose.connect(config.mongoURI, 
     { useNewUrlParser: true, 
@@ -34,6 +35,11 @@ app.use((req, res, next) =>{
 
 //global error middleware
 app.use((error, req, res, next) => {
+  if(req.file) {
+    fs.unlink(req.file.path, (err) => {
+      console.log(err);
+    });
+  }
   if (res.headerSent) {
     return next(error);
   }
