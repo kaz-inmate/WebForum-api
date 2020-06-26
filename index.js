@@ -5,10 +5,10 @@ const reglog = require('./routes/register');
 const posts = require('./routes/create-post');
 const likesCom = require('./routes/like-unlike');
 const profile = require('./routes/user-profile');
-
+const config = require('./config/key');
 const HttpError = require('./models/http-error');
 
-mongoose.connect('mongodb://localhost:27017/forum-proj', 
+mongoose.connect(config.mongoURI, 
     { useNewUrlParser: true, 
       useCreateIndex: true, 
       useFindAndModify:false }).then(success => {
