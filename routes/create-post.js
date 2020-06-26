@@ -3,18 +3,21 @@ const router = express.Router();
 const Post = require('../models/Post');
 const HttpError = require('../models/http-error');
 const checkAuth = require('../middleware/auth');
+const imageUpload = require('../middleware/media');
 
-router.post('/post-data', checkAuth, async (req, res, next) => {
+router.post('/post-data', imageUpload.single('image'), checkAuth, async (req, res, next) => {
+   
     const {title, description} = req.body;
     const {id} = req.userData;
-    if (!title || !description) {
-        return next(new HttpError('Need required fields', 401));
-    }
-
+    // if (!title || !description) {
+    //     return next(new HttpError('Need required fields', 401));
+    // }
+    
     let newPost = new Post({
         title,
         description,
-        author: id
+        author: id,
+        image: (typeof req.file !== "undefined") ? 'http://localhost:8000/' + req.file.path : '',
     });
 
     try {
